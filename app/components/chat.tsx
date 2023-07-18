@@ -1,3 +1,4 @@
+declare var webkitSpeechRecognition: any;
 import { useDebouncedCallback } from "use-debounce";
 import React, {
   useState,
@@ -31,6 +32,7 @@ import AutoIcon from "../icons/auto.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 import RobotIcon from "../icons/robot.svg";
+import AudioIcon from "../icons/audio.svg";
 
 import {
   ChatMessage,
@@ -294,7 +296,6 @@ export function PromptHints(props: {
 
 function ClearContextDivider() {
   const chatStore = useChatStore();
-
   return (
     <div
       className={styles["clear-context"]}
@@ -389,6 +390,7 @@ export function ChatActions(props: {
   showPromptModal: () => void;
   scrollToBottom: () => void;
   showPromptHints: () => void;
+  showAudioInput: () => void;
   hitBottom: boolean;
 }) {
   const config = useAppConfig();
@@ -491,7 +493,11 @@ export function ChatActions(props: {
         text={currentModel}
         icon={<RobotIcon />}
       />
-
+      <ChatAction
+        onClick={props.showAudioInput}
+        text={true ? Locale.Chat.InputActions.AudioInput : "正在输入..."}
+        icon={<AudioIcon />}
+      />
       {showModelSelector && (
         <Selector
           items={models.map((m) => ({
@@ -622,6 +628,7 @@ export function Chat() {
     setPromptHints([]);
     if (!isMobileScreen) inputRef.current?.focus();
     setAutoScroll(true);
+    console.log("这里是发送");
   };
 
   const onPromptSelect = (prompt: Prompt) => {
@@ -1056,6 +1063,20 @@ export function Chat() {
           showPromptModal={() => setShowPromptModal(true)}
           scrollToBottom={scrollToBottom}
           hitBottom={hitBottom}
+          showAudioInput={() => {
+            let recognition = new webkitSpeechRecognition();
+            let currentText = userInput;
+            recognition.lang = "zh-CN";
+            recognition.start();
+            recognition.onresult = (event: {
+              results: { [x: string]: { transcript: any }[] };
+              resultIndex: string | number;
+            }) => {
+              const result = event.results[event.resultIndex][0].transcript;
+              currentText = currentText + result;
+              setUserInput(currentText);
+            };
+          }}
           showPromptHints={() => {
             // Click again to close
             if (promptHints.length > 0) {

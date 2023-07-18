@@ -142,6 +142,8 @@ export class ChatGPTApi implements LLMApi {
             }
           },
           onmessage(msg) {
+            console.log(msg, "asdasd");
+
             if (msg.data === "[DONE]" || finished) {
               return finish();
             }

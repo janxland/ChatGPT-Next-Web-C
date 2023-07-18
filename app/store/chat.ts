@@ -332,6 +332,17 @@ export const useChatStore = create<ChatStore>()(
             botMessage.streaming = false;
             if (message) {
               botMessage.content = message;
+              var voices = window.speechSynthesis.getVoices();
+              var chineseVoices: (SpeechSynthesisVoice | null)[] = [];
+              voices.forEach(function (voice) {
+                if (voice.lang.indexOf("zh") == 0) {
+                  chineseVoices.push(voice);
+                }
+              });
+              var utterance = new SpeechSynthesisUtterance();
+              utterance.voice = chineseVoices[6];
+              utterance.text = message;
+              window.speechSynthesis.speak(utterance);
               get().onNewMessage(botMessage);
             }
             ChatControllerPool.remove(

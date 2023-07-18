@@ -51,6 +51,7 @@ const cn = {
       Masks: "所有面具",
       Clear: "清除聊天",
       Settings: "对话设置",
+      AudioInput: "语音输入",
     },
     Rename: "重命名对话",
     Typing: "正在输入…",
