@@ -1,3 +1,4 @@
+declare const MyspeechSynthesis: string;
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -332,18 +333,31 @@ export const useChatStore = create<ChatStore>()(
             botMessage.streaming = false;
             if (message) {
               botMessage.content = message;
-              var voices = window.speechSynthesis.getVoices();
-              var chineseVoices: (SpeechSynthesisVoice | null)[] = [];
-              voices.forEach(function (voice) {
-                if (voice.lang.indexOf("zh") == 0) {
-                  chineseVoices.push(voice);
+              get().onNewMessage(botMessage);
+              if ("speechSynthesis" in window) {
+                var voices = window.speechSynthesis.getVoices();
+                var chineseVoices: (SpeechSynthesisVoice | null)[] = [];
+                voices.forEach(function (voice) {
+                  if (voice.lang.indexOf("zh") == 0) {
+                    chineseVoices.push(voice);
+                  }
+                });
+                var utterance = new SpeechSynthesisUtterance();
+                utterance.voice = chineseVoices[6];
+                utterance.text = message;
+                window.speechSynthesis.speak(utterance);
+              } else {
+                console.log("该浏览器不支持语音合成。");
+              }
+              const regex = /{.*?}/g; // 匹配所有的花括号内的内容，非贪婪匹配
+              const matches = message.match(regex);
+
+              const objects = matches?.map((match) => JSON.parse(match));
+              objects?.forEach((object) => {
+                if (object.action == "openWindow") {
+                  window.open(object.url);
                 }
               });
-              var utterance = new SpeechSynthesisUtterance();
-              utterance.voice = chineseVoices[6];
-              utterance.text = message;
-              window.speechSynthesis.speak(utterance);
-              get().onNewMessage(botMessage);
             }
             ChatControllerPool.remove(
               sessionIndex,
