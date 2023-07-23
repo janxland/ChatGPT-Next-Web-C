@@ -323,7 +323,6 @@ export const useChatStore = create<ChatStore>()(
           },
           onFinish(message) {
             botMessage.streaming = false;
-
             if (message) {
               botMessage.content = message;
               get().onNewMessage(botMessage);
@@ -350,6 +349,7 @@ export const useChatStore = create<ChatStore>()(
 
               const objects = matches?.map((match) => JSON.parse(match));
               objects?.forEach((object) => {
+                showToast("检测到指令：" + object.action);
                 if (object.action == "openWindow") {
                   window.open(object.url);
                 }

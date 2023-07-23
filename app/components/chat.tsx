@@ -691,6 +691,7 @@ export function Chat() {
   };
 
   const doSubmit = (userInput: string) => {
+    currState.isAuidoInput = false;
     if (userInput.trim() === "") return;
     const matchCommand = chatCommands.match(userInput);
     if (matchCommand.matched) {
@@ -1196,8 +1197,10 @@ export function Chat() {
             recognition.lang = "zh-CN";
             recognition.continuous = true;
             recognition.interimResults = true;
-
-            let currentText = userInput;
+            let currentText: any = userInput;
+            inputRef.current?.addEventListener("input", (e) => {
+              currentText = inputRef.current?.value;
+            });
             recognition.onresult = (event: {
               resultIndex: any;
               results: string | any[];

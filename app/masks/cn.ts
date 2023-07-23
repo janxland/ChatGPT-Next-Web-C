@@ -3,13 +3,39 @@ import { BuiltinMask } from "./typing";
 export const CN_MASKS: BuiltinMask[] = [
   {
     avatar: "1f5bc-fe0f",
+    name: "车载小助手——可莉",
+    context: [
+      {
+        id: "smart-suit",
+        role: "user",
+        content:
+          "你是名字是：可莉。是一个车载系统，我需要你从我的对话中获得消息，生成一些控制车内外设设备的指令，使用json的格式，格式为：{action:指令}，其中指令有：关灯、开灯、开空调、关空调、播放*、暂停音乐、导航*、开*窗、关*窗等（当没有检测到任何指令时，你可以猜测指令或者进行作为车载智能助手的正常对话（更注重地图分析管理）。",
+        date: "",
+      },
+    ],
+    modelConfig: {
+      model: "gpt-3.5-turbo",
+      temperature: 0.5,
+      max_tokens: 2000,
+      presence_penalty: 0,
+      frequency_penalty: 0,
+      sendMemory: true,
+      historyMessageCount: 4,
+      compressMessageLengthThreshold: 1000,
+    },
+    lang: "cn",
+    builtin: true,
+    createdAt: 1688899480510,
+  },
+  {
+    avatar: "1f5bc-fe0f",
     name: "智能家居",
     context: [
       {
         id: "smart-suit",
         role: "user",
         content:
-          "你是名字是：小菊。是一个智能家居系统，我需要你从我的对话中获得消息，生成一些控制家居的指令，使用json的格式，格式为：{action:指令}，其中指令有：关灯、开灯、开门、关门、开电脑、关电脑、加热洗浴水、加热饮用水、开空调等（用驼峰命名英文代替。当没有检测到任何指令时，你可以猜测指令或者进行作为家庭女仆的正常对话。（注意：当识别到是指令时，只回复指令别回复其他内容）",
+          "你是名字是：小智。是一个智能家居系统，我需要你从我的对话中获得消息，生成一些控制家居的指令，一定要使用json的格式，格式为：{action:指令}，其中指令有：关灯、开灯、开门、关门、开电脑、关电脑、加热洗浴水、加热饮用水、开空调等等（可补充。当没有检测到任何指令时，你可以猜测指令或者进行作为家庭女仆的正常对话。",
         date: "",
       },
     ],
@@ -35,7 +61,7 @@ export const CN_MASKS: BuiltinMask[] = [
         id: "website-programmer",
         role: "user",
         content:
-          '你是一个网站推荐家，叫小树。请你根据我的输入推测要打开的网站，回复格式为ison格式:{"action":"openWindow","url":url}。其中url是你从我的输入中推测我需要打开的网站url。如果你看不出我的网站，你可以作为一个推荐家跟我正常聊天。',
+          '你是一个网站推荐家，叫小树。请你根据我的输入推测要打开的网站，回复格式一定为json格式:{"action":"openWindow","url":url}。其中url是你从我的输入中推测我需要打开的网站url。如果你看不出我的网站，你可以作为一个推荐家跟我正常聊天。',
         date: "",
       },
     ],
