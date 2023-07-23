@@ -20,6 +20,12 @@ const en: LocaleType = {
   },
   Chat: {
     SubTitle: (count: number) => `${count} messages`,
+    EditMessage: {
+      Topic: {
+        Title: "Topic",
+        SubTitle: "Change the current topic",
+      },
+    },
     Actions: {
       ChatList: "Go To Chat List",
       CompressedHistory: "Compressed History Memory Prompt",
@@ -28,7 +34,7 @@ const en: LocaleType = {
       Stop: "Stop",
       Retry: "Retry",
       Pin: "Pin",
-      PinToastContent: "Pinned 2 messages to contextual prompts",
+      PinToastContent: "Pinned 1 messages to contextual prompts",
       PinToastAction: "View",
       Delete: "Delete",
       Edit: "Edit",
@@ -69,6 +75,7 @@ const en: LocaleType = {
       Reset: "Reset to Default",
       SaveAs: "Save as Mask",
     },
+    IsContext: "Contextual Prompt",
   },
   Export: {
     Title: "Export Messages",
@@ -141,7 +148,10 @@ const en: LocaleType = {
       Title: "Font Size",
       SubTitle: "Adjust font size of chat content",
     },
-
+    InjectSystemPrompts: {
+      Title: "Inject System Prompts",
+      SubTitle: "Inject a global system prompt for every request",
+    },
     InputTemplate: {
       Title: "Input Template",
       SubTitle: "Newest message will be filled to this template",
@@ -221,6 +231,10 @@ const en: LocaleType = {
     Endpoint: {
       Title: "Endpoint",
       SubTitle: "Custom endpoint must start with http(s)://",
+    },
+    CustomModel: {
+      Title: "Custom Models",
+      SubTitle: "Add extra model options, separate by comma",
     },
     Model: "Model",
     Temperature: {
@@ -336,6 +350,11 @@ const en: LocaleType = {
     Messages: "Messages",
     Topic: "Topic",
     Time: "Time",
+  },
+
+  URLCommand: {
+    Code: "Detected access code from url, confirm to apply? ",
+    Settings: "Detected settings from url, confirm to apply?",
   },
 };
 
