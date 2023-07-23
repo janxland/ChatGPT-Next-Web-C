@@ -526,7 +526,17 @@ export function Settings() {
               }
             ></InputRange>
           </ListItem>
-
+          <ListItem title="语音合成" subTitle="开启语音合成.">
+            <input
+              type="checkbox"
+              checked={config.playAudio}
+              onChange={(e) =>
+                updateConfig(
+                  (config) => (config.playAudio = e.currentTarget.checked),
+                )
+              }
+            ></input>
+          </ListItem>
           <ListItem
             title={Locale.Settings.SendPreviewBubble.Title}
             subTitle={Locale.Settings.SendPreviewBubble.SubTitle}

@@ -3,7 +3,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { trimTopic } from "../utils";
-
 import Locale, { getLang } from "../locales";
 import { showToast } from "../components/ui-lib";
 import { ModelConfig, ModelType, useAppConfig } from "./config";
@@ -278,7 +277,6 @@ export const useChatStore = create<ChatStore>()(
         get().updateStat(message);
         get().summarizeSession();
       },
-
       async onUserInput(content) {
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
@@ -331,10 +329,14 @@ export const useChatStore = create<ChatStore>()(
           },
           onFinish(message) {
             botMessage.streaming = false;
+
             if (message) {
               botMessage.content = message;
               get().onNewMessage(botMessage);
-              if ("speechSynthesis" in window) {
+              if (
+                "speechSynthesis" in window &&
+                useAppConfig.getState().playAudio
+              ) {
                 var voices = window.speechSynthesis.getVoices();
                 var chineseVoices: (SpeechSynthesisVoice | null)[] = [];
                 voices.forEach(function (voice) {

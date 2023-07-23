@@ -12,7 +12,10 @@ RUN yarn config set registry 'https://registry.npmmirror.com/'
 RUN yarn install
 
 FROM base AS builder
-
+RUN echo "https://mirrors.aliyun.com/alpine/v3.14/main/" > /etc/apk/repositories \
+    && echo "https://mirrors.aliyun.com/alpine/v3.14/community/" >> /etc/apk/repositories \
+    && apk update 
+    
 RUN apk update && apk add --no-cache git
 
 ENV OPENAI_API_KEY="sk-eDnnPEQB2E4uMX665lO6vspCg1GnfVz3Y57dTnEMakeqRRAQ"

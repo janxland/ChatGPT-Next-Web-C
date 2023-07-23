@@ -80,7 +80,7 @@ import { ChatCommandPrefix, useChatCommand, useCommand } from "../command";
 import { prettyObject } from "../utils/format";
 import { ExportMessageModal } from "./exporter";
 import { getClientConfig } from "../config/client";
-
+let currState = { isAuidoInput: false, currentText: "" };
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
 });
@@ -396,7 +396,6 @@ export function ChatActions(props: {
   const config = useAppConfig();
   const navigate = useNavigate();
   const chatStore = useChatStore();
-
   // switch themes
   const theme = config.theme;
   function nextTheme() {
@@ -495,7 +494,11 @@ export function ChatActions(props: {
       />
       <ChatAction
         onClick={props.showAudioInput}
-        text={true ? Locale.Chat.InputActions.AudioInput : "正在输入..."}
+        text={
+          currState.isAuidoInput
+            ? "正在语音输入..."
+            : Locale.Chat.InputActions.AudioInput
+        }
         icon={<AudioIcon />}
       />
       {showModelSelector && (
@@ -521,7 +524,6 @@ export function ChatActions(props: {
 
 export function Chat() {
   type RenderMessage = ChatMessage & { preview?: boolean };
-
   const chatStore = useChatStore();
   const [session, sessionIndex] = useChatStore((state) => [
     state.currentSession(),
@@ -1064,18 +1066,43 @@ export function Chat() {
           scrollToBottom={scrollToBottom}
           hitBottom={hitBottom}
           showAudioInput={() => {
+            currState.isAuidoInput = !currState.isAuidoInput;
             let recognition = new webkitSpeechRecognition();
-            let currentText = userInput;
             recognition.lang = "zh-CN";
-            recognition.start();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            let currentText = userInput;
             recognition.onresult = (event: {
-              results: { [x: string]: { transcript: any }[] };
-              resultIndex: string | number;
+              resultIndex: any;
+              results: string | any[];
             }) => {
-              const result = event.results[event.resultIndex][0].transcript;
-              currentText = currentText + result;
+              if (!currState.isAuidoInput) {
+                currState.isAuidoInput = false;
+                recognition.stop();
+                return;
+              }
+              for (let i = event.resultIndex; i < event.results.length; i++) {
+                const result = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                  if (/[，。！？、；：“”‘’【】《》]/.test(result.slice(-1))) {
+                    currentText += result;
+                  }
+                }
+              }
               setUserInput(currentText);
             };
+
+            recognition.onerror = (event: { error: any }) => {
+              console.error(event.error);
+              currState.isAuidoInput = false;
+            };
+
+            recognition.onend = () => {
+              currState.isAuidoInput = false;
+            };
+
+            recognition.start();
           }}
           showPromptHints={() => {
             // Click again to close
